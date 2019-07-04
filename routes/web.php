@@ -16,3 +16,7 @@ Route::get('/', function () {
     
 });
 Route::get('/login', 'AuthController@index')->name('login.index');
+Route::post('/proseslogin', 'AuthController@login')->name('login.proses');
+Route::get('/register', 'AuthController@register');
+Route::post('/prosesregister', 'AuthController@proses_register')->name('register.proses');
+Route::get('/logout', 'AuthController@logout');

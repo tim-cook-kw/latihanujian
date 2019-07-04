@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
+use App\User;
 
 class AuthController extends Controller
 {
@@ -24,7 +25,7 @@ class AuthController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -83,7 +84,7 @@ class AuthController extends Controller
         //
     }
 
-    public function login(){
+    public function login(Request $request){
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
@@ -92,5 +93,33 @@ class AuthController extends Controller
         } else {
             return redirect()->intended('login');
         }
+    }
+
+    public function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|max:255',
+            'username' => 'required|unique:users',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+    }
+
+    public function register(){
+        return view('pages.register');
+    }
+
+    public function proses_register(Request $request){
+        $userobject = new User();
+        $userobject->name="test";
+        $userobject->email=$request->email;
+        $userobject->password=bcrypt($request->password);
+        $userobject->save();
+        return redirect()->route("login.index");
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect()->route("login.index"); // ini untuk redirect setelah logout
     }
 }
