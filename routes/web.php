@@ -14,3 +14,13 @@
 Route::get('/', function () {
     return view('pages.dashboard');
 });
+Route::get('/buku','Databuku@index')->name('buku.index');
+
+Route::get('/create', 'Databuku@create')->name('databuku.create');
+    
+Route::post('/save', 'DataBuku@store')->name('databuku.store');
+
+
+Route::get('/delete/{id}', 'DataBuku@destroy')->name('databuku.destroy');
+Route::get('/edit/{id}', 'DataBuku@edit')->name('databuku.edit');
+Route::post('/update/{id}', 'DataBuku@update')->name('databuku.update');
