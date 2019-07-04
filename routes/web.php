@@ -13,4 +13,6 @@
 
 Route::get('/', function () {
     return view('pages.dashboard');
+    
 });
+Route::get('/login', 'AuthController@index')->name('login.index');
