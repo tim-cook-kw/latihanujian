@@ -13,7 +13,13 @@
 
 Route::get('/', function () {
     return view('pages.dashboard');
+    
 });
+Route::get('/login', 'AuthController@index')->name('login.index');
+Route::post('/proseslogin', 'AuthController@login')->name('login.proses');
+Route::get('/register', 'AuthController@register');
+Route::post('/prosesregister', 'AuthController@proses_register')->name('register.proses');
+Route::get('/logout', 'AuthController@logout');
 Route::get('/buku','Databuku@index')->name('buku.index');
 
 Route::get('/create', 'Databuku@create')->name('databuku.create');
