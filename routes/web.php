@@ -30,3 +30,5 @@ Route::post('/save', 'DataBuku@store')->name('databuku.store');
 Route::get('/delete/{id}', 'DataBuku@destroy')->name('databuku.destroy');
 Route::get('/edit/{id}', 'DataBuku@edit')->name('databuku.edit');
 Route::post('/update/{id}', 'DataBuku@update')->name('databuku.update');
+
+Route::get('/pinjaman', 'TransaksiPinjaman@index');
