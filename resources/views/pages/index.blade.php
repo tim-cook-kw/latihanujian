@@ -25,6 +25,7 @@
                         <th>Penulis Buku</th>
                         <th>Kategori Buku</th>
                         <th>Deskripsi Buku</th>
+                        <th>Gambar Buku</th>
                         <th>Action</th>
                     </thead>
                     <tbody>
@@ -40,9 +41,10 @@
                             <td>{{$key->penulis}}</td> 
                            
 
-                            <td>{{$key->id_kategori}}</td> 
+                            <td>{{$key->nama_kategori}}</td> 
 
                             <td>{{$key->deskripsi_singkat}}</td> 
+                            <td><img src="{{asset($key->foto)}}" style="width:100px;height:100px;"></td>
                             {{-- ini  berasal dari table --}}
                             <td>
                                 <a class="btn btn-success" href="{{route('databuku.edit',['id' => $key->id_buku])}}"> Update</a>

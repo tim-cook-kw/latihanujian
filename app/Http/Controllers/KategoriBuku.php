@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
-use App\User;
-
-class AuthController extends Controller
+use App\KategoriBukuModel;
+class KategoriBuku extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +13,8 @@ class AuthController extends Controller
      */
     public function index()
     {
-        return view('pages.login');
+        $kategoribuku = KategoriBukuModel::all();
+        return view('pages.kategori',['kategori' => $kategoribuku]);
     }
 
     /**
@@ -25,7 +24,7 @@ class AuthController extends Controller
      */
     public function create()
     {
-        
+        return view('pages.createkategori');
     }
 
     /**
@@ -36,7 +35,10 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $kategoriObject = new KategoriBukuModel();
+        $kategoriObject->nama_kategori = $request->nama_kategori;
+        $kategoriObject->save();
+        return redirect()->route('kategori.index');
     }
 
     /**
@@ -58,7 +60,8 @@ class AuthController extends Controller
      */
     public function edit($id)
     {
-        //
+        $kategori = KategoriBukuModel::find($id);
+        return view('pages.editkategori',['edit_kategori' => $kategori]);
     }
 
     /**
@@ -70,7 +73,10 @@ class AuthController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $kategoriObject = KategoriBukuModel::find($id);
+        $kategoriObject->nama_kategori = $request->nama_kategori;
+        $kategoriObject->save();
+        return redirect()->route('kategori.index');
     }
 
     /**
@@ -81,45 +87,8 @@ class AuthController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
-
-    public function login(Request $request){
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            return redirect()->intended('dashboard');
-        } else {
-            return redirect()->intended('login');
-        }
-    }
-
-    public function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'username' => 'required|unique:users',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-        ]);
-    }
-
-    public function register(){
-        return view('pages.register');
-    }
-
-    public function proses_register(Request $request){
-        $userobject = new User();
-        $userobject->name="test";
-        $userobject->email=$request->email;
-        $userobject->password=bcrypt($request->password);
-        $userobject->save();
-        return redirect()->route("login.index");
-    }
-
-    public function logout(){
-        Auth::logout();
-        return redirect()->route("login.index"); // ini untuk redirect setelah logout
+        $kategoriObject = KategoriBukuModel::find($id);
+        $kategoriObject->delete();
+        return redirect()->route('kategori.index');
     }
 }
