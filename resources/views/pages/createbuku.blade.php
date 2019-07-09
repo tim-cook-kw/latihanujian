@@ -20,7 +20,7 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <form action="{{route('databuku.store')}}" method="POST">
+                        <form action="{{route('databuku.store')}}" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 
                                 {{csrf_field()}}
@@ -38,6 +38,10 @@
 
                                 <label>Deskripsi Singkat</label>
                                 <input class="form-control" name="deskripsi">
+
+                                <label>Foto</label>
+                                <input type="file" class="form-control" name="foto">
+
                             </div>
                             <button class="btn btn-primary">Simpan</button>
                         </form>

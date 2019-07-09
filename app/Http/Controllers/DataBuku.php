@@ -37,17 +37,25 @@ class DataBuku extends Controller
      */
     public function store(Request $request)
     {
-        $BukuModel = new BukuModel();
-        $BukuModel->judul_buku = $request->input('nama_buku'); //namatabel = nama form
+        $file = $request -> file('foto');
+        if ($request->hasFile('foto')) {
+            
+            $BukuModel = new BukuModel();
+            $BukuModel->judul_buku = $request->input('nama_buku'); //namatabel = nama form
 
-        $BukuModel->penerbit = $request->input('penerbit');
-        $BukuModel->penulis = $request->input('penulis');
+            $BukuModel->penerbit = $request->input('penerbit');
+            $BukuModel->penulis = $request->input('penulis');
 
-        $BukuModel->id_kategori = $request->input('kategori');
-        $BukuModel->deskripsi_singkat = $request->input('deskripsi');
-         
-        $BukuModel->save();
-        return redirect()->route('buku.index');
+            $BukuModel->id_kategori = $request->input('kategori');
+            $BukuModel->deskripsi_singkat = $request->input('deskripsi');
+            $BukuModel->foto = 'buku/'. $file->getClientOriginalName();
+            
+
+            $BukuModel->save();
+            $path = $request->foto->storeAs('buku', $file->getClientOriginalName());
+            return redirect()->route('buku.index');
+        }
+       
     }
 
     /**
