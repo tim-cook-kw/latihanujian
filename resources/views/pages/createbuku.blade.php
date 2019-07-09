@@ -34,8 +34,11 @@
                                 <input class="form-control" name="penulis">
 
                                 <label>Kategori Buku</label>
-                                <input class="form-control" name="kategori">
-
+                                <select class="form-control" name="kategori">
+                                    @foreach($kategori as $key)
+                                        <option value="{{$key->id_kategori}}">{{$key->nama_kategori}}</option>
+                                    @endforeach
+                                </select>
                                 <label>Deskripsi Singkat</label>
                                 <input class="form-control" name="deskripsi">
 

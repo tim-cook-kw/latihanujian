@@ -3,115 +3,58 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DataBuku as BukuModel;
-
+use Illuminate\Support\Facades\DB;
+use App\databukuModel;
+use App\KategoriBukuModel;
 class DataBuku extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $BukuModel = BukuModel::all();
-        return view('pages.index',['buku' => $BukuModel]); //Menampilkan Seluruh Data
-     
+    public function index(){
+        $table = DB::table('buku') ->join('kategori', 'kategori.id_kategori', '=', 'buku.id_kategori')
+        ->select('buku.*', 'kategori.nama_kategori')
+        ->get();
+        return view('pages.index',['buku' => $table]);
     }
+    public function store(Request $request){
+        $fotovar = $request->file('foto');
+        $bukuObject = new databukuModel();
+        $bukuObject->judul_buku = $request->nama_buku;
+        $bukuObject->penerbit = $request->penerbit;
+        $bukuObject->penulis = $request->penulis;
+        $bukuObject->id_kategori = $request->kategori;
+        $bukuObject->deskripsi_singkat = $request->deskripsi;
+        $bukuObject->foto = 'gambarbuku/'.$fotovar->getClientOriginalname();
+        $path = $request->foto->storeAs('gambarbuku', $fotovar->getClientOriginalname());
+        $bukuObject->save();
+        return redirect()->route('buku.index');
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('pages.createbuku');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $file = $request -> file('foto');
-        if ($request->hasFile('foto')) {
-            
-            $BukuModel = new BukuModel();
-            $BukuModel->judul_buku = $request->input('nama_buku'); //namatabel = nama form
-
-            $BukuModel->penerbit = $request->input('penerbit');
-            $BukuModel->penulis = $request->input('penulis');
-
-            $BukuModel->id_kategori = $request->input('kategori');
-            $BukuModel->deskripsi_singkat = $request->input('deskripsi');
-            $BukuModel->foto = 'buku/'. $file->getClientOriginalName();
-            
-
-            $BukuModel->save();
-            $path = $request->foto->storeAs('buku', $file->getClientOriginalName());
-            return redirect()->route('buku.index');
-        }
-       
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $BukuModel = BukuModel::find($id);
-        return view('pages.editbuku',['buku_edit'=>$BukuModel]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $BukuModel = BukuModel::find($id);
-        $BukuModel->judul_buku = $request->input('nama_buku'); //namatabel = nama form
-
-        $BukuModel->penerbit = $request->input('penerbit');
-        $BukuModel->penulis = $request->input('penulis');
-
-        $BukuModel->id_kategori = $request->input('kategori');
-        $BukuModel->deskripsi_singkat = $request->input('deskripsi');
-        $BukuModel->save();
+    public function update(Request $request,$id){
+        $fotovar = $request->file('foto');
+        $bukuObject = databukuModel::find($id);
+        $bukuObject->judul_buku = $request->nama_buku;
+        $bukuObject->penerbit = $request->penerbit;
+        $bukuObject->penulis = $request->penulis;
+        $bukuObject->id_kategori = $request->kategori;
+        $bukuObject->deskripsi_singkat = $request->deskripsi;
+        $bukuObject->foto = 'gambarbuku/'.$fotovar->getClientOriginalname();
+        $path = $request->foto->storeAs('gambarbuku', $fotovar->getClientOriginalname());
+        $bukuObject->save();
         return redirect()->route('buku.index');
     }
+    public function edit($id){
+        $kategoridata = KategoriBukuModel::all();
+        $bukuedit = databukuModel::find($id);
+        return view('pages.editbuku',['buku_edit' => $bukuedit,'kategori'=> $kategoridata]);
+    }
+    public function show($id){ 
+        
+    }
+    public function create(){
+        $kategoridata = KategoriBukuModel::all();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $BukuModel = BukuModel::find($id);
-        $BukuModel->delete();
-        return redirect()->route('buku.index');
+        return view('pages.createbuku',['kategori'=>$kategoridata]);
+    }
+    public function destroy($id){
+        
     }
 }
